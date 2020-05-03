@@ -26,9 +26,9 @@ RUN curl -O https://download.brother.com/welcome/dlf103879/brscan-skey-0.2.4-1.i
 COPY brscan-skey.cfg /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg
 RUN echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg
 COPY --from=target-qemu /tmp/qemu/qemu-user-static/bin/qemu-i386 /usr/bin/qemu-i386-static
-RUN mkdir -p /var/run/dbus
-COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
-COPY entrypoint.sh /app/entrypoint.sh
 COPY --from=target-qemu /tmp/pause /app/pause
+RUN mkdir -p /var/run/dbus
+COPY entrypoint.sh /app/entrypoint.sh
+COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD [ "start" ]
