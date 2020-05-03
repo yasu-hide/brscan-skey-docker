@@ -28,6 +28,7 @@ RUN echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2
 COPY --from=target-qemu /tmp/qemu/qemu-user-static/bin/qemu-i386 /usr/bin/qemu-i386-static
 COPY --from=target-qemu /tmp/pause /app/pause
 RUN mkdir -p /var/run/dbus
+RUN sed -i -e 's/^rlimit-nproc=/#rlimit-nproc=/' /etc/avahi/avahi-daemon.conf
 COPY entrypoint.sh /app/entrypoint.sh
 COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
 ENTRYPOINT [ "/app/entrypoint.sh" ]
