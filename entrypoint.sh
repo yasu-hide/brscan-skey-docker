@@ -9,11 +9,13 @@ start () {
         /usr/bin/brsaneconfig4 -a name=${name%%.*} model=$model ip=$ip
     done
     /usr/bin/brscan-skey
+    echo "Running."
 }
 
 stop () {
     /usr/bin/brscan-skey --terminate
     avahi-daemon -k
+    echo "Stopped."
 }
 
 trap stop 1 2 3 15
