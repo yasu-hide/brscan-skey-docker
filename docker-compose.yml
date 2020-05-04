@@ -10,5 +10,6 @@ services:
         condition: on-failure
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ./onedrive.refresh_token:/app/bash-onedrive-upload/.refresh_token
     privileged: true
     network_mode: host
