@@ -1,0 +1,14 @@
+---
+version: "3"
+services:
+  brscan-skey:
+    image: vet5lqplpecmpnqb/brscan-skey
+    env_file:
+      - .env
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    network_mode: host
