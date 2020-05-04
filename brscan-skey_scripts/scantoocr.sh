@@ -10,12 +10,12 @@ set +o noclobber
 #
 resolution=300
 format=pnm
-output_file=/tmp/brscan/brscan_"`date +%Y-%m-%d-%H-%M-%S`""_ocr.pnm"
+output_file=/tmp/brscan/brscan_"`date +%Y-%m-%d-%H-%M-%S`""_ocr.pdf"
 
 device=$1
 mkdir -p /tmp/brscan
 sleep  0.1
 mkdir -p /tmp/brscan
 output_tmp=`mktemp /tmp/brscan/brscan.XXXXXX`
-scanimage --device-name "$device" --resolution $resolution --format $format > $output_tmp  2>/dev/null
+scanimage --batch --batch-print --device-name "$device" --mode Gray --resolution $resolution --format $format | tesseract -l jpn -c stream_filelist=true - - pdf > $output_tmp
 mv $output_tmp $output_file
