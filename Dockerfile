@@ -11,6 +11,14 @@ RUN cd qemu && \
     make -j4 && make install
 ADD pause.c pause.c
 RUN gcc -fdata-sections -ffunction-sections -Wl,--gc-sections -Os -static -o pause pause.c
+FROM arm32v7/debian:stretch-slim AS prepare-onedrive
+WORKDIR /tmp
+RUN apt update && apt install -y --no-install-recommends git ca-certificates curl && \
+    rm -rf /var/lib/apt/cache/*
+#RUN git clone --recursive https://github.com/fkalis/bash-onedrive-upload.git
+RUN git clone --recursive https://github.com/deankramer/bash-onedrive-upload.git
+RUN sed -i -e '12s/&client_secret=${api_client_secret}//;12s/&/" -d "/g;12s/ -X POST/ -d "client_secret=${api_client_secret}" -X POST/' /tmp/bash-onedrive-upload/onedrive-authorize
+RUN sed -i '15i echo ${refresh_token} > ${refresh_token_file}' /tmp/bash-onedrive-upload/onedrive-authorize
 FROM arm32v7/debian:stretch-slim
 WORKDIR /tmp
 ARG SCANKEY_USR="ONEDRIVE"
@@ -31,5 +39,7 @@ RUN mkdir -p /var/run/dbus
 RUN sed -i -e 's/^rlimit-nproc=/#rlimit-nproc=/' /etc/avahi/avahi-daemon.conf
 COPY entrypoint.sh /app/entrypoint.sh
 COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
+COPY --from=prepare-onedrive /tmp/bash-onedrive-upload /app/bash-onedrive-upload
+COPY onedrive.cfg /app/bash-onedrive-upload/onedrive.cfg
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD [ "start" ]
