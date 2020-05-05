@@ -10,7 +10,7 @@ RUN wget -q https://download.qemu.org/${QEMU_VER}.tar.xz && tar xf ${QEMU_VER}.t
 RUN cd qemu && \
     ./configure --prefix=$PWD/qemu-user-static --target-list="i386-linux-user" --static --disable-system --disable-tools --enable-linux-user && \
     make -j4 && make install
-ADD pause.c pause.c
+COPY pause.c pause.c
 RUN gcc -fdata-sections -ffunction-sections -Wl,--gc-sections -Os -static -o pause pause.c
 FROM arm32v7/debian:stretch-slim AS prepare-onedrive
 WORKDIR /tmp
@@ -24,9 +24,9 @@ RUN sed -i '15i echo ${refresh_token} > ${refresh_token_file}' /tmp/bash-onedriv
 FROM arm32v7/debian:stretch-slim
 WORKDIR /tmp
 ARG SCANKEY_USR="ONEDRIVE"
-RUN dpkg --add-architecture i386 && apt update
-RUN apt install -y --no-install-recommends ca-certificates curl netbase \
-    avahi-daemon avahi-utils dbus sane-utils:i386 libsane-extras-common:i386 \
+RUN dpkg --add-architecture i386 && apt update && \
+    apt install -y --no-install-recommends ca-certificates curl netbase avahi-daemon avahi-utils dbus \
+    sane-utils:i386 libsane-extras-common:i386 \
     tesseract-ocr tesseract-ocr-jpn && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
@@ -35,11 +35,11 @@ RUN curl -O https://download.brother.com/welcome/dlf103892/brscan4-0.4.8-1.i386.
 RUN curl -O https://download.brother.com/welcome/dlf103879/brscan-skey-0.2.4-1.i386.deb && \
     dpkg -i brscan-skey-0.2.4-1.i386.deb
 COPY brscan-skey.cfg /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg
-RUN echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg
+RUN echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg && \
+    mkdir -p /var/run/dbus && \
+    sed -i -e 's/^rlimit-nproc=/#rlimit-nproc=/' /etc/avahi/avahi-daemon.conf
 COPY --from=target-qemu /tmp/qemu/qemu-user-static/bin/qemu-i386 /usr/bin/qemu-i386-static
 COPY --from=target-qemu /tmp/pause /app/pause
-RUN mkdir -p /var/run/dbus
-RUN sed -i -e 's/^rlimit-nproc=/#rlimit-nproc=/' /etc/avahi/avahi-daemon.conf
 COPY entrypoint.sh /app/entrypoint.sh
 COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
 COPY --from=prepare-onedrive /tmp/bash-onedrive-upload /app/bash-onedrive-upload
