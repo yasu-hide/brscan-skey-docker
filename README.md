@@ -9,7 +9,10 @@ Docker(docker-compose)で動きます。
 - スキャナの制御に、sane-utils と [brscan4ドライバ](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103892_000&flang=1001&type3=565) を利用しています。
 - スキャナボタン操作に、[brscan-skey](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103879_000&flang=1001&type3=569) を利用しています。
 - スキャナの検出に、[avahi](http://avahi.org/) を利用しています。
+- 文字の認識に、[tesseract](https://github.com/tesseract-ocr/) を利用しています。
 - onedriveのアップロードに、[bash-onedrive-upload](https://github.com/fkalis/bash-onedrive-upload) を利用しています。
+
+----
 
 ## 使い方
 
@@ -78,6 +81,8 @@ $ cat onedrive.refresh_token
 
 うまく動作すれば、onedriveに読み取った結果のファイルがアップロードされているはずです！
 
+----
+
 ## 設定 (.envファイル)
 
 ### ONEDRIVE_API_CLIENT_ID
@@ -122,6 +127,8 @@ ONEDRIVE_ROOT_FOLDER=スキャン画像
 ```
 
 初期値は、 __/__ です。
+
+----
 
 ## 動作について
 
