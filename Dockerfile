@@ -4,7 +4,8 @@ ARG QEMU_VER=qemu-5.0.0
 RUN apt update && apt install -y --no-install-recommends build-essential python3 pkg-config autoconf automake libtool gettext \
     zlib1g-dev libglib2.0 libfdt-dev libpixman-1-dev libaio-dev libbz2-dev liblzo2-dev libcap-dev libcap-ng-dev libgtk-3-dev libseccomp-dev \
     ca-certificates wget && \
-    rm -rf /var/lib/apt/cache/*
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 RUN wget -q https://download.qemu.org/${QEMU_VER}.tar.xz && tar xf ${QEMU_VER}.tar.xz && ln -s ${QEMU_VER} qemu
 RUN cd qemu && \
     ./configure --prefix=$PWD/qemu-user-static --target-list="i386-linux-user" --static --disable-system --disable-tools --enable-linux-user && \
@@ -14,7 +15,8 @@ RUN gcc -fdata-sections -ffunction-sections -Wl,--gc-sections -Os -static -o pau
 FROM arm32v7/debian:stretch-slim AS prepare-onedrive
 WORKDIR /tmp
 RUN apt update && apt install -y --no-install-recommends git ca-certificates curl && \
-    rm -rf /var/lib/apt/cache/*
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 #RUN git clone --recursive https://github.com/fkalis/bash-onedrive-upload.git
 RUN git clone --recursive https://github.com/deankramer/bash-onedrive-upload.git
 RUN sed -i -e '12s/&client_secret=${api_client_secret}//;12s/&/" -d "/g;12s/ -X POST/ -d "client_secret=${api_client_secret}" -X POST/' /tmp/bash-onedrive-upload/onedrive-authorize
@@ -26,7 +28,8 @@ RUN dpkg --add-architecture i386 && apt update
 RUN apt install -y --no-install-recommends ca-certificates curl netbase \
     avahi-daemon avahi-utils dbus sane-utils:i386 libsane-extras-common:i386 \
     tesseract-ocr tesseract-ocr-jpn && \
-    rm -rf /var/lib/apt/cache/*
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
 RUN curl -O https://download.brother.com/welcome/dlf103892/brscan4-0.4.8-1.i386.deb && \
     dpkg -i brscan4-0.4.8-1.i386.deb
 RUN curl -O https://download.brother.com/welcome/dlf103879/brscan-skey-0.2.4-1.i386.deb && \
