@@ -15,8 +15,10 @@ output_file=/tmp/brscan/brscan_"`date +%Y-%m-%d-%H-%M-%S`""_ocr.pdf"
 device=$1
 mkdir -p /tmp/brscan
 sleep  0.1
-output_tmp=`mktemp /tmp/brscan/brscan.XXXXXX`
+output_tmp=`mktemp /tmp/brscan/brscan_XXXXXX`
 echo "Retrieving image from $2 to $output_file."
-scanimage --batch --batch-print --device-name "$device" --mode 'Black & White' --resolution $resolution --format $format | tesseract - - -l jpn -c stream_filelist=true pdf > $output_tmp
-mv $output_tmp $output_file && echo .
+declare -a outpnm_tmp=($(scanimage --batch="${output_tmp}_%d.pnm" --batch-print --device-name "$device" --resolution $resolution --format $format))
+echo "debug: Batch mode images ${outpnm_tmp[@]}." >&2
+convert ${outpnm_tmp[@]} ${output_tmp}.pdf && rm -f $output_tmp ${outpnm_tmp[@]} && \
+mv ${output_tmp}.pdf $output_file && echo . && \
 /app/bash-onedrive-upload/onedrive-upload $output_file && rm -f $output_file

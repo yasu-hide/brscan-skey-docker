@@ -26,8 +26,7 @@ WORKDIR /tmp
 ARG SCANKEY_USR="ONEDRIVE"
 RUN dpkg --add-architecture i386 && apt update && \
     apt install -y --no-install-recommends ca-certificates curl netbase avahi-daemon avahi-utils dbus \
-    sane-utils:i386 libsane-extras-common:i386 \
-    tesseract-ocr tesseract-ocr-jpn && \
+    sane-utils:i386 libsane-extras-common:i386 imagemagick && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 RUN curl -O https://download.brother.com/welcome/dlf103892/brscan4-0.4.8-1.i386.deb && \

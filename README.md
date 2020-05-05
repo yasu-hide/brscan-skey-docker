@@ -9,7 +9,6 @@ Docker(docker-compose)で動きます。
 - スキャナの制御に、sane-utils と [brscan4ドライバ](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103892_000&flang=1001&type3=565) を利用しています。
 - スキャナボタン操作に、[brscan-skey](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103879_000&flang=1001&type3=569) を利用しています。
 - スキャナの検出に、[avahi](http://avahi.org/) を利用しています。
-- 文字の認識に、[tesseract](https://github.com/tesseract-ocr/) を利用しています。
 - onedriveのアップロードに、[bash-onedrive-upload](https://github.com/fkalis/bash-onedrive-upload) を利用しています。
 
 ----
@@ -156,6 +155,6 @@ ONEDRIVE_ROOT_FOLDER=スキャン画像
     * `onedrive-upload` コマンドでonedriveにアップロードする
 * OCR (`scantoocr.sh`)
     * 解像度を __300__ 、フォーマットを __pnm__ に設定する
-    * `scanimage` コマンドを識別されたスキャナデバイス名や上記設定値で起動して画像を取り込み、標準出力に出力する
-    * `tesseract` コマンドでパイプされた標準入力を受け取って文字認識し、PDFファイルに出力する
+    * `scanimage` コマンドを識別されたスキャナデバイス名や上記設定値で起動してバッチモードで画像を取り込む
+    * `convert` コマンドで、取り込んだ複数の画像を結合してPDFファイルに出力する
     * `onedrive-upload` コマンドでonedriveにアップロードする
