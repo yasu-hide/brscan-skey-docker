@@ -26,7 +26,7 @@ WORKDIR /tmp
 ARG SCANKEY_USR="ONEDRIVE"
 RUN dpkg --add-architecture i386 && apt update && \
     apt install -y --no-install-recommends ca-certificates curl netbase avahi-daemon avahi-utils dbus \
-    sane-utils:i386 imagemagick && \
+    sane-utils:i386 imagemagick tesseract-ocr tesseract-ocr-jpn && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 RUN c_rehash

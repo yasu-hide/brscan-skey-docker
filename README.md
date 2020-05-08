@@ -9,6 +9,7 @@ Docker(docker-compose)で動きます。
 - スキャナの制御に、sane-utils と [brscan4ドライバ](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103892_000&flang=1001&type3=565) を利用しています。
 - スキャナボタン操作に、[brscan-skey](https://support.brother.co.jp/j/b/downloadhowto.aspx?c=jp&lang=ja&prod=dcpl2550dw&os=128&dlid=dlf103879_000&flang=1001&type3=569) を利用しています。
 - スキャナの検出に、[avahi](http://avahi.org/) を利用しています。
+- 文字の認識に、[tesseract](https://github.com/tesseract-ocr/) を利用しています。
 - onedriveのアップロードに、[bash-onedrive-upload](https://github.com/fkalis/bash-onedrive-upload) を利用しています。
 
 ----
@@ -29,6 +30,7 @@ _.envファイル_ にonedrive関連の設定をします。
 設定項目は後述します。
 
 ```
+ENABLE_OCR=(無効は0、有効は1)
 ONEDRIVE_API_CLIENT_ID=(Live SDKアプリケーションのクライアントID)
 ONEDRIVE_API_CLIENT_SECRET=(Live SDKアプリケーションのアプリケーションシークレット)
 ONEDRIVE_DRIVE_RESOURCE=root
@@ -83,6 +85,19 @@ $ cat onedrive.refresh_token
 ----
 
 ## 設定 (.envファイル)
+
+### ENABLE_OCR
+
+tesseract-ocrによる文字起こしを設定します。
+
+無効は0、有効は1です。
+
+変更例:
+```
+ENABLE_OCR=1
+```
+
+初期値は __0__ です。
 
 ### ONEDRIVE_API_CLIENT_ID
 
@@ -156,5 +171,5 @@ ONEDRIVE_ROOT_FOLDER=スキャン画像
 * OCR (`scantoocr.sh`)
     * 解像度を __300__ 、フォーマットを __pnm__ に設定する
     * `scanimage` コマンドを識別されたスキャナデバイス名や上記設定値で起動してバッチモードで画像を取り込む
-    * `convert` コマンドで、取り込んだ複数の画像を結合してPDFファイルに出力する
+    * `tesseract-ocr` コマンドで文字認識して、または`convert` コマンドで取り込んだ複数の画像を結合して、PDFファイルに出力する
     * `onedrive-upload` コマンドでonedriveにアップロードする
