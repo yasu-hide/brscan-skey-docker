@@ -23,7 +23,6 @@ RUN sed -i -e '12s/&client_secret=${api_client_secret}//;12s/&/" -d "/g;12s/ -X 
 RUN sed -i '15i echo ${refresh_token} > ${refresh_token_file}' /tmp/bash-onedrive-upload/onedrive-authorize
 FROM arm32v7/debian:buster-slim
 WORKDIR /tmp
-ARG SCANKEY_USR="ONEDRIVE"
 RUN dpkg --add-architecture i386 && apt update && \
     apt install -y --no-install-recommends ca-certificates curl netbase avahi-daemon avahi-utils dbus \
     sane-utils:i386 imagemagick tesseract-ocr tesseract-ocr-jpn && \
@@ -35,8 +34,7 @@ RUN curl -O https://download.brother.com/welcome/dlf103892/brscan4-0.4.8-1.i386.
 RUN curl -O https://download.brother.com/welcome/dlf103879/brscan-skey-0.2.4-1.i386.deb && \
     dpkg -i brscan-skey-0.2.4-1.i386.deb
 COPY brscan-skey.cfg /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg
-RUN echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg && \
-    mkdir -p /var/run/dbus && \
+RUN mkdir -p /var/run/dbus && \
     sed -i -e 's/^rlimit-nproc=/#rlimit-nproc=/' /etc/avahi/avahi-daemon.conf
 COPY --from=target-qemu /tmp/qemu/qemu-user-static/bin/qemu-i386 /usr/bin/qemu-i386-static
 COPY --from=target-qemu /tmp/pause /app/pause

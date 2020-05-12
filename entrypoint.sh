@@ -2,6 +2,7 @@
 set -e
 
 start () {
+    echo "user=$SCANKEY_USR" >> /opt/brother/scanner/brscan-skey/brscan-skey-0.2.4-0.cfg 
     dbus-daemon --system
     avahi-daemon --daemon
     while ! avahi-daemon -c; do echo "waiting avahi-daemon"; sleep 1; done
