@@ -21,6 +21,12 @@ RUN apt update && apt install -y --no-install-recommends git ca-certificates cur
 RUN git clone --recursive https://github.com/deankramer/bash-onedrive-upload.git
 RUN sed -i -e '12s/&client_secret=${api_client_secret}//;12s/&/" -d "/g;12s/ -X POST/ -d "client_secret=${api_client_secret}" -X POST/' /tmp/bash-onedrive-upload/onedrive-authorize
 RUN sed -i '15i echo ${refresh_token} > ${refresh_token_file}' /tmp/bash-onedrive-upload/onedrive-authorize
+FROM arm32v7/golang:buster AS target-golang
+WORKDIR /tmp
+COPY up2ever.go /tmp/up2ever.go
+RUN go get -u github.com/dreampuf/evernote-sdk-golang/client && \
+    go get -u github.com/dreampuf/evernote-sdk-golang/edam && \
+    go build up2ever.go
 FROM arm32v7/debian:buster-slim
 WORKDIR /tmp
 RUN dpkg --add-architecture i386 && apt update && \
@@ -43,5 +49,6 @@ COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
 COPY --from=prepare-onedrive /tmp/bash-onedrive-upload /app/bash-onedrive-upload
 COPY onedrive.cfg /app/bash-onedrive-upload/onedrive.cfg
 COPY msmtprc /etc/msmtprc
+COPY --from=target-golang /tmp/up2ever /app/up2ever/up2ever
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD [ "start" ]

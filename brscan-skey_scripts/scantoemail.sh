@@ -19,5 +19,6 @@ sleep  0.1
 echo "Retrieving image from $2 to $output_file."
 declare -a output_jpg=($(scanimage --batch="${output_file}_%d.jpg" --batch-print --device-name "$device" --resolution $resolution --format $format))
 echo "debug: Batch mode images ${output_jpg[@]}." >&2
-echo ${output_jpg[@]} | s-nail -s "Scan `date +%Y-%m-%d-%H-%M-%S`" $(printf ' -a %s' ${output_jpg[@]}) -r "$EMAIL_FROM" "$EMAIL_TO" && echo "." && \
+#echo ${output_jpg[@]} | s-nail -s "Scan `date +%Y-%m-%d-%H-%M-%S`" $(printf ' -a %s' ${output_jpg[@]}) -r "$EMAIL_FROM" "$EMAIL_TO" && echo "." && \
+/app/up2ever/up2ever ${output_jpg[@]} && echo "." && \
 rm -f ${output_jpg[@]}
