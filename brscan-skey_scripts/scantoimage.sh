@@ -17,6 +17,6 @@ mkdir -p /tmp/brscan
 sleep  0.1
 output_tmp=`mktemp /tmp/brscan/brscan.XXXXXX`
 echo "Retrieving image from $2 to $output_file."
-scanimage --device-name "$device" --resolution $resolution --format $format > $output_tmp  2>/dev/null
+scanimage --device-name "$device" --resolution $resolution --format $format > $output_tmp
 mv $output_tmp $output_file && echo .
 /app/bash-onedrive-upload/onedrive-upload $output_file && rm -f $output_file
