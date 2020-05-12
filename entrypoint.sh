@@ -10,6 +10,14 @@ start () {
         /usr/bin/brsaneconfig4 -a name=${name%%.*} model=$model ip=$ip
     done
     /usr/bin/brscan-skey
+    if [ -n "${EMAIL_FROM}" -a -n "${EMAIL_USER}" -a -n "${EMAIL_PASS}" ]; then
+        echo "account default" >> /etc/msmtprc
+        echo "host ${EMAIL_HOST}" >> /etc/msmtprc
+        echo "port ${EMAIL_PORT}" >> /etc/msmtprc
+        echo "from ${EMAIL_FROM}" >> /etc/msmtprc
+        echo "user ${EMAIL_USER}" >> /etc/msmtprc
+        echo "password ${EMAIL_PASS}" >> /etc/msmtprc
+    fi
     echo "Running."
 }
 

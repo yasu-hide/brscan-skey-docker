@@ -25,7 +25,7 @@ FROM arm32v7/debian:buster-slim
 WORKDIR /tmp
 RUN dpkg --add-architecture i386 && apt update && \
     apt install -y --no-install-recommends ca-certificates curl netbase avahi-daemon avahi-utils dbus \
-    sane-utils:i386 imagemagick tesseract-ocr tesseract-ocr-jpn && \
+    sane-utils:i386 imagemagick tesseract-ocr tesseract-ocr-jpn msmtp msmtp-mta s-nail && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 RUN c_rehash
@@ -42,5 +42,6 @@ COPY entrypoint.sh /app/entrypoint.sh
 COPY brscan-skey_scripts/. /app/brscan-skey_scripts/
 COPY --from=prepare-onedrive /tmp/bash-onedrive-upload /app/bash-onedrive-upload
 COPY onedrive.cfg /app/bash-onedrive-upload/onedrive.cfg
+COPY msmtprc /etc/msmtprc
 ENTRYPOINT [ "/app/entrypoint.sh" ]
 CMD [ "start" ]
