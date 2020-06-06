@@ -1,0 +1,13 @@
+---
+image: vet5lqplpecmpnqb/brscan-skey:latest
+manifests:
+- image: vet5lqplpecmpnqb/brscan-skey:arm64v8
+  platform:
+    architecture: arm64
+    os: linux
+    variant: v8
+- image: vet5lqplpecmpnqb/brscan-skey:arm32v7
+  platform:
+    architecture: arm
+    os: linux
+    variant: v7
